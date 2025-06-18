@@ -1,43 +1,39 @@
 
-import { useState, useEffect } from 'react';
-import { LoginScreen } from '@/components/auth/LoginScreen';
+import { useAuth0 } from '@auth0/auth0-react';
+import { Auth0LoginScreen } from '@/components/auth/Auth0LoginScreen';
 import { CustomerDashboard } from '@/components/customer/CustomerDashboard';
 import { AdminDashboard } from '@/components/admin/AdminDashboard';
 
 const Index = () => {
-  const [user, setUser] = useState(null);
-  const [userRole, setUserRole] = useState(null);
-
-  useEffect(() => {
-    // Check if user is logged in from localStorage
-    const savedUser = localStorage.getItem('user');
-    const savedRole = localStorage.getItem('userRole');
-    
-    if (savedUser && savedRole) {
-      setUser(JSON.parse(savedUser));
-      setUserRole(savedRole);
-    }
-  }, []);
-
-  const handleLogin = (userData, role) => {
-    setUser(userData);
-    setUserRole(role);
-    localStorage.setItem('user', JSON.stringify(userData));
-    localStorage.setItem('userRole', role);
-  };
+  const { user, isAuthenticated, isLoading, logout } = useAuth0();
 
   const handleLogout = () => {
-    setUser(null);
-    setUserRole(null);
-    localStorage.removeItem('user');
-    localStorage.removeItem('userRole');
+    logout({ 
+      logoutParams: {
+        returnTo: window.location.origin 
+      }
+    });
     localStorage.removeItem('cart');
     localStorage.removeItem('ecoStats');
   };
 
-  if (!user) {
-    return <LoginScreen onLogin={handleLogin} />;
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-50 via-blue-50 to-emerald-50">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-green-500"></div>
+          <p className="mt-4 text-gray-600">Loading...</p>
+        </div>
+      </div>
+    );
   }
+
+  if (!isAuthenticated) {
+    return <Auth0LoginScreen />;
+  }
+
+  // Determine user role based on login_hint or user metadata
+  const userRole = user?.login_hint === 'admin' || user?.email?.includes('admin') ? 'admin' : 'customer';
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 via-blue-50 to-emerald-50">
