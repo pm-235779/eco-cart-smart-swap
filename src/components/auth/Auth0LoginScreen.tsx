@@ -5,51 +5,94 @@ import { Card } from '@/components/ui/card';
 import { Leaf, Users, ShoppingCart } from 'lucide-react';
 
 export const Auth0LoginScreen = () => {
-  const { loginWithRedirect, isLoading } = useAuth0();
+  const { loginWithRedirect, isLoading, error } = useAuth0();
+
+  // Add debugging for Auth0 state
+  console.log('Auth0 Login Screen - isLoading:', isLoading, 'error:', error);
 
   const handleGoogleLogin = () => {
+    console.log('Attempting Google login...');
     loginWithRedirect({
       authorizationParams: {
         connection: 'google-oauth2',
         login_hint: 'customer'
       }
+    }).catch(err => {
+      console.error('Google login error:', err);
     });
   };
 
   const handleFacebookLogin = () => {
+    console.log('Attempting Facebook login...');
     loginWithRedirect({
       authorizationParams: {
         connection: 'facebook',
         login_hint: 'customer'
       }
+    }).catch(err => {
+      console.error('Facebook login error:', err);
     });
   };
 
   const handleTwitterLogin = () => {
+    console.log('Attempting Twitter login...');
     loginWithRedirect({
       authorizationParams: {
         connection: 'twitter',
         login_hint: 'customer'
       }
+    }).catch(err => {
+      console.error('Twitter login error:', err);
     });
   };
 
   const handleLinkedInLogin = () => {
+    console.log('Attempting LinkedIn login...');
     loginWithRedirect({
       authorizationParams: {
         connection: 'linkedin',
         login_hint: 'customer'
       }
+    }).catch(err => {
+      console.error('LinkedIn login error:', err);
     });
   };
 
   const handleAdminLogin = () => {
+    console.log('Attempting admin login...');
     loginWithRedirect({
       authorizationParams: {
         login_hint: 'admin'
       }
+    }).catch(err => {
+      console.error('Admin login error:', err);
     });
   };
+
+  const handleEmailLogin = () => {
+    console.log('Attempting email login...');
+    loginWithRedirect().catch(err => {
+      console.error('Email login error:', err);
+    });
+  };
+
+  // Show error if there's an Auth0 error
+  if (error) {
+    console.error('Auth0 Error:', error);
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-red-400 via-red-500 to-red-600 p-4">
+        <Card className="w-full max-w-md p-8 bg-white/95 backdrop-blur-sm shadow-2xl">
+          <div className="text-center">
+            <h1 className="text-2xl font-bold text-red-600 mb-4">Authentication Error</h1>
+            <p className="text-gray-600 mb-4">{error.message}</p>
+            <Button onClick={() => window.location.reload()} className="w-full">
+              Try Again
+            </Button>
+          </div>
+        </Card>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-400 via-blue-500 to-emerald-600 p-4">
@@ -66,6 +109,15 @@ export const Auth0LoginScreen = () => {
         </div>
 
         <div className="space-y-4">
+          <Button
+            onClick={handleEmailLogin}
+            disabled={isLoading}
+            className="w-full h-14 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-semibold text-lg transition-all duration-300 transform hover:scale-105"
+          >
+            <ShoppingCart className="w-5 h-5 mr-3" />
+            {isLoading ? 'Signing in...' : 'Sign In with Email'}
+          </Button>
+
           <Button
             onClick={handleGoogleLogin}
             disabled={isLoading}

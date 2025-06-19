@@ -4,12 +4,20 @@ export const config = {
   auth0: {
     domain: 'pukhrajmotwani23.us.auth0.com',
     clientId: 'GphtyPMt6Jl7c3y5cQD199fwS4Y0TQ76',
-    audience: import.meta.env.VITE_AUTH0_AUDIENCE, // Your backend API identifier
+    audience: 'https://pukhrajmotwani23.us.auth0.com/api/v2/', // Using the API identifier you provided
   },
   environment: import.meta.env.MODE,
   isDevelopment: import.meta.env.MODE === 'development',
   isProduction: import.meta.env.MODE === 'production',
 };
+
+// Log configuration for debugging
+console.log('Auth0 Config:', {
+  domain: config.auth0.domain,
+  clientId: config.auth0.clientId,
+  audience: config.auth0.audience,
+  redirectUri: window.location.origin
+});
 
 // Validate required environment variables
 const requiredEnvVars = {
