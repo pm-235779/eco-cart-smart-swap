@@ -1,6 +1,7 @@
 
 import axios, { AxiosInstance, AxiosError } from 'axios';
 import { ApiError } from '@/types/api';
+import { config } from '@/config/environment';
 
 class ApiClient {
   private client: AxiosInstance;
@@ -8,7 +9,7 @@ class ApiClient {
 
   constructor() {
     this.client = axios.create({
-      baseURL: process.env.VITE_API_URL || 'http://localhost:5000/api',
+      baseURL: config.apiUrl,
       timeout: 10000,
       headers: {
         'Content-Type': 'application/json',
@@ -30,10 +31,11 @@ class ApiClient {
     this.client.interceptors.response.use(
       (response) => response,
       (error: AxiosError) => {
+        const errorData = error.response?.data as any;
         const apiError: ApiError = {
-          message: error.response?.data?.message || error.message || 'An error occurred',
+          message: errorData?.message || error.message || 'An error occurred',
           status: error.response?.status || 500,
-          code: error.response?.data?.code || 'UNKNOWN_ERROR',
+          code: errorData?.code || 'UNKNOWN_ERROR',
         };
         return Promise.reject(apiError);
       }
