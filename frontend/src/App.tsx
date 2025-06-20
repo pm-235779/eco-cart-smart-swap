@@ -24,7 +24,7 @@ const App = () => (
     domain={config.auth0.domain}
     clientId={config.auth0.clientId}
     authorizationParams={{
-      redirect_uri: window.location.origin,
+      redirect_uri: "http://localhost:8080",
       audience: config.auth0.audience, // This enables getting access tokens for your API
       scope: "openid profile email"
     }}

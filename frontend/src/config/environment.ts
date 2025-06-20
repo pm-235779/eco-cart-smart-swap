@@ -3,7 +3,7 @@ export const config = {
   apiUrl: import.meta.env.VITE_API_URL || 'http://localhost:5000/api',
   auth0: {
     domain: 'pukhrajmotwani23.us.auth0.com',
-    clientId: 'GphtyPMt6Jl7c3y5cQD199fwS4Y0TQ76',
+    clientId: 'hVxMNpx5QFSc9ACmB52ipiY0lkaufPEP',
     audience: 'https://pukhrajmotwani23.us.auth0.com/api/v2/', // Using the API identifier you provided
   },
   environment: import.meta.env.MODE,
